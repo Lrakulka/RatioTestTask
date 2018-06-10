@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpSession;
 import java.util.Objects;
 
+import static com.ratiose.testtask.controller.ControllerUtils.getReturnStatus;
 import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -46,9 +47,5 @@ public class MovieController {
                                    HttpSession session) {
         final User user = userFacade.findUser(email, password);
         return getReturnStatus(Objects.nonNull(user) && Objects.nonNull(userFacade.addWatchedMovie(user, movieId)));
-    }
-
-    private ResponseEntity getReturnStatus(boolean result) {
-        return ResponseEntity.status(result ? HttpStatus.OK : HttpStatus.BAD_REQUEST).body(null);
     }
 }
