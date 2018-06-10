@@ -2,7 +2,7 @@ package com.ratiose.testtask.service.impl;
 
 import com.ratiose.testtask.entity.Actor;
 import com.ratiose.testtask.repository.ActorRepository;
-import com.ratiose.testtask.service.ActorService;
+import com.ratiose.testtask.service.BaseTmdbService;
 import com.ratiose.testtask.service.tmdb.TmdbApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 
 @Service
-public class ActorServiceImpl implements ActorService {
-    @Autowired
-    private ActorRepository actorRepository;
+public class ActorServiceImpl implements BaseTmdbService<Actor> {
     @Autowired
     private TmdbApi tmdbApi;
+    @Autowired
+    private ActorRepository actorRepository;
 
     @Override
     public Actor findByTmdbId(String actorId) {
@@ -22,7 +22,7 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
-    public Actor registerActor(String tmdbId) {
+    public Actor register(String tmdbId) {
         if (!tmdbApi.isActorExist(tmdbId) || Objects.nonNull(actorRepository.findByTmdbId(tmdbId))) {
             return null;
         }
@@ -30,7 +30,7 @@ public class ActorServiceImpl implements ActorService {
         return actorRepository.save(actor);
     }
 
-    private Actor createActor(String tmdbId) {
+    protected Actor createActor(String tmdbId) {
         Actor actor = new Actor();
         actor.setTmdbId(tmdbId);
         return actor;

@@ -1,6 +1,7 @@
 package com.ratiose.testtask.controller;
 
-import com.ratiose.testtask.service.UserService;
+import com.ratiose.testtask.entity.User;
+import com.ratiose.testtask.facade.UserFacade;
 import com.ratiose.testtask.service.tmdb.TmdbApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,14 +12,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.util.Objects;
 
+import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @RequestMapping("/movie")
 public class MovieController {
     @Autowired
-    private UserService userService;
+    private UserFacade userFacade;
 
     @Autowired
     private TmdbApi tmdbApi;
@@ -27,12 +30,25 @@ public class MovieController {
     public ResponseEntity popular(@RequestParam String email,
                                   @RequestParam String password,
                                   HttpSession session) {
-        if (userService.findUser(email, password) == null) {
+        if (userFacade.findUser(email, password) == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
         String popularMovies = tmdbApi.popularMovies();
 
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(popularMovies);
+    }
+
+    @RequestMapping(value = "/addWatched", method = PATCH)
+    public ResponseEntity addActor(@RequestParam String email,
+                                   @RequestParam String password,
+                                   @RequestParam String movieId,
+                                   HttpSession session) {
+        final User user = userFacade.findUser(email, password);
+        return getReturnStatus(Objects.nonNull(user) && Objects.nonNull(userFacade.addWatchedMovie(user, movieId)));
+    }
+
+    private ResponseEntity getReturnStatus(boolean result) {
+        return ResponseEntity.status(result ? HttpStatus.OK : HttpStatus.BAD_REQUEST).body(null);
     }
 }

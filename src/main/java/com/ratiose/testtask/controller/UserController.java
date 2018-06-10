@@ -2,17 +2,14 @@ package com.ratiose.testtask.controller;
 
 import com.ratiose.testtask.entity.User;
 import com.ratiose.testtask.facade.UserFacade;
-import com.ratiose.testtask.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
-
 import java.util.Objects;
 
 import static org.springframework.web.bind.annotation.RequestMethod.PATCH;

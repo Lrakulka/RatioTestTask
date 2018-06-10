@@ -17,6 +17,7 @@ import java.util.Objects;
 public class TmdbApiImpl implements TmdbApi {
     private static final String POPULAR_MOVIES = "/movie/popular";
     private static final String ACTOR_INFO = "/person/{person_id}";
+    private static final String MOVIE_INFO = "/movie/{movie_id}";
 
     @Value("${tmdb.apikey}")
     private String tmdbApiKey;
@@ -33,6 +34,11 @@ public class TmdbApiImpl implements TmdbApi {
     @Override
     public boolean isActorExist(String actorId) {
         return Objects.nonNull(executeRequest(ACTOR_INFO.replace("{person_id}", actorId)));
+    }
+
+    @Override
+    public boolean isMovieExist(String movieId) {
+        return Objects.nonNull(executeRequest(MOVIE_INFO.replace("{movie_id}", movieId)));
     }
 
     private String executeRequest(final String requestUrl) {

@@ -16,3 +16,7 @@ curl -X POST --data "email=test@test2.com&password=test&actorId=13" http://local
 
 ### Remove favorite actor
 curl -X PATCH --data "email=test@test2.com&password=test&actorId=13" http://localhost:8080/user/removeActor/ -v
+
+### Mark movie watched
+curl -X PATCH --data "email=test@test2.com&password=test&movieId=2" http://localhost:8080/movie/addWatched/ -v
+

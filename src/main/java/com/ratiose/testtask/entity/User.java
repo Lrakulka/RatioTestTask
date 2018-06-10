@@ -10,13 +10,16 @@ public class User {
     @GeneratedValue
     Long id;
 
-    @Column(unique=true)
+    @Column(unique = true)
     String email;
 
     String password;
 
-    @ElementCollection(targetClass=Actor.class)
+    @ElementCollection(targetClass = Actor.class)
     Set<Actor> favoriteActors;
+
+    @ElementCollection(targetClass = Movie.class)
+    Set<Movie> watchetMovie;
 
     public Long getId() {
         return id;
@@ -48,5 +51,13 @@ public class User {
 
     public void setFavoriteActors(Set<Actor> favoriteActors) {
         this.favoriteActors = favoriteActors;
+    }
+
+    public Set<Movie> getWatchetMovie() {
+        return watchetMovie;
+    }
+
+    public void setWatchetMovie(Set<Movie> watchetMovie) {
+        this.watchetMovie = watchetMovie;
     }
 }
