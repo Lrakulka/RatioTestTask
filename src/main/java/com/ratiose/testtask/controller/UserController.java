@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import java.util.Objects;
 
+import static org.springframework.web.bind.annotation.RequestMethod.PATCH;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
@@ -26,24 +27,31 @@ public class UserController {
 
     @RequestMapping(value = "/register", method = POST)
     public ResponseEntity registerUser(@RequestParam String email,
-                                               @RequestParam String password,
-                                               HttpSession session) {
-        if (userFacade.registerUser(email, password) != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(null);
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+                                       @RequestParam String password,
+                                       HttpSession session) {
+        return getReturnStatus(Objects.nonNull(userFacade.registerUser(email, password)));
     }
 
     // TODO: configure security
     @RequestMapping(value = "/addActor", method = POST)
     public ResponseEntity addActor(@RequestParam String email,
-                                       @RequestParam String password,
-                                       @RequestParam String actorId,
-                                       HttpSession session) {
+                                   @RequestParam String password,
+                                   @RequestParam String actorId,
+                                   HttpSession session) {
         final User user = userFacade.findUser(email, password);
-        return (Objects.isNull(user) || Objects.isNull(userFacade.addActor(user, actorId)))
-                ? ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null)
-                : ResponseEntity.status(HttpStatus.OK).body(null);
+        return getReturnStatus(Objects.nonNull(user) && Objects.nonNull(userFacade.addActor(user, actorId)));
+    }
+
+    @RequestMapping(value = "/removeActor", method = PATCH)
+    public ResponseEntity removeActor(@RequestParam String email,
+                                      @RequestParam String password,
+                                      @RequestParam String actorId,
+                                      HttpSession session) {
+        final User user = userFacade.findUser(email, password);
+        return getReturnStatus(Objects.nonNull(user) && Objects.nonNull(userFacade.removeActor(user, actorId)));
+    }
+
+    private ResponseEntity getReturnStatus(boolean result) {
+        return ResponseEntity.status(result ? HttpStatus.OK : HttpStatus.BAD_REQUEST).body(null);
     }
 }

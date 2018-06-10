@@ -6,7 +6,6 @@ import com.ratiose.testtask.facade.UserFacade;
 import com.ratiose.testtask.repository.UserRepository;
 import com.ratiose.testtask.service.ActorService;
 import com.ratiose.testtask.service.UserService;
-import com.ratiose.testtask.service.tmdb.TmdbApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,11 +34,21 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public Actor addActor(final User user, final String actorId) {
-        final Actor actor = Optional.ofNullable(actorService.findById(actorId))
+        final Actor actor = Optional.ofNullable(actorService.findByTmdbId(actorId))
                 .orElseGet(() -> actorService.registerActor(actorId));
 
         if (Objects.nonNull(actor)) {
             user.getFavoriteActors().add(actor);
+            userRepository.save(user);
+        }
+        return actor;
+    }
+
+    @Override
+    public Actor removeActor(User user, String actorId) {
+        final Actor actor = actorService.findByTmdbId(actorId);
+        if (Objects.nonNull(actor)) {
+            user.getFavoriteActors().remove(actor);
             userRepository.save(user);
         }
         return actor;

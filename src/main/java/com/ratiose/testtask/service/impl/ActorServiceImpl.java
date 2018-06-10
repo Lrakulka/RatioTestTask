@@ -17,7 +17,7 @@ public class ActorServiceImpl implements ActorService {
     private TmdbApi tmdbApi;
 
     @Override
-    public Actor findById(String actorId) {
+    public Actor findByTmdbId(String actorId) {
         return actorRepository.findByTmdbId(actorId);
     }
 

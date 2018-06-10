@@ -9,4 +9,6 @@ public interface UserFacade {
     User findUser(String email, String password);
 
     Actor addActor(User email, String actorId);
+
+    Actor removeActor(User user, String actorId);
 }

@@ -13,3 +13,6 @@ curl -X POST --data "email=test@test2.com&password=test" http://localhost:8080/m
 
 ### Add favorite actor
 curl -X POST --data "email=test@test2.com&password=test&actorId=13" http://localhost:8080/user/addActor/ -v
+
+### Remove favorite actor
+curl -X PATCH --data "email=test@test2.com&password=test&actorId=13" http://localhost:8080/user/removeActor/ -v
