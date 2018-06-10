@@ -3,13 +3,18 @@ package com.ratiose.testtask.service.impl;
 import com.ratiose.testtask.entity.Actor;
 import com.ratiose.testtask.repository.ActorRepository;
 import com.ratiose.testtask.service.ActorService;
+import com.ratiose.testtask.service.tmdb.TmdbApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 public class ActorServiceImpl implements ActorService {
     @Autowired
     private ActorRepository actorRepository;
+    @Autowired
+    private TmdbApi tmdbApi;
 
     @Override
     public Actor findById(String actorId) {
@@ -18,11 +23,10 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public Actor registerActor(String tmdbId) {
-        Actor actor = actorRepository.findByTmdbId(tmdbId);
-        if (actor != null) {
+        if (!tmdbApi.isActorExist(tmdbId) || Objects.nonNull(actorRepository.findByTmdbId(tmdbId))) {
             return null;
         }
-        actor = createActor(tmdbId);
+        final Actor actor = createActor(tmdbId);
         return actorRepository.save(actor);
     }
 

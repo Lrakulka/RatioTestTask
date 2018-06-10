@@ -11,9 +11,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 @Service
 public class TmdbApiImpl implements TmdbApi {
+    private static final String POPULAR_MOVIES = "/movie/popular";
+    private static final String ACTOR_INFO = "/person/{person_id}";
+
     @Value("${tmdb.apikey}")
     private String tmdbApiKey;
     @Value("${tmdb.language}")
@@ -21,18 +25,26 @@ public class TmdbApiImpl implements TmdbApi {
     @Value("${tmdb.api.base.url}")
     private String tmdbApiBaseUrl;
 
+    @Override
     public String popularMovies() throws IllegalArgumentException {
+        return executeRequest(POPULAR_MOVIES);
+    }
+
+    @Override
+    public boolean isActorExist(String actorId) {
+        return Objects.nonNull(executeRequest(ACTOR_INFO.replace("{person_id}", actorId)));
+    }
+
+    private String executeRequest(final String requestUrl) {
         try {
-            String url = getTmdbUrl("/movie/popular");
+            String url = getTmdbUrl(requestUrl);
             HttpResponse<JsonNode> jsonResponse = Unirest.get(url).asJson();
 
             if (jsonResponse.getStatus() != HttpStatus.SC_OK) {
                 return null;
             }
 
-            String responseJSONString = jsonResponse.getBody().toString();
-
-            return responseJSONString;
+            return jsonResponse.getBody().toString();
         } catch (UnirestException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {

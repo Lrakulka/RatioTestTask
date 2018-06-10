@@ -6,6 +6,7 @@ import com.ratiose.testtask.facade.UserFacade;
 import com.ratiose.testtask.repository.UserRepository;
 import com.ratiose.testtask.service.ActorService;
 import com.ratiose.testtask.service.UserService;
+import com.ratiose.testtask.service.tmdb.TmdbApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
